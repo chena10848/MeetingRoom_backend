@@ -77,7 +77,7 @@ public class UserService {
             String googleToken = request.getToken();
             System.out.println("Received token: " + googleToken);
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(HTTP_TRANSPORT, JSON_FACTORY)
-                    .setAudience(Collections.singletonList("167214762151-kqnd5rshmlgmhacbhra3pdpp80bknvs5.apps.googleusercontent.com"))
+                    .setAudience(Collections.singletonList("*"))
                     .build();
 
             GoogleIdToken idToken = verifier.verify(googleToken);
