@@ -1,0 +1,150 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > KafkaProducerConfig</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demo.Config</a>
+</div>
+
+<h1>Coverage Summary for Class: KafkaProducerConfig (com.example.demo.Config)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KafkaProducerConfig</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demo.Config;
+&nbsp;
+&nbsp;import org.apache.kafka.clients.admin.NewTopic;
+&nbsp;import org.apache.kafka.clients.producer.ProducerConfig;
+&nbsp;import org.apache.kafka.common.serialization.StringSerializer;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.context.annotation.Bean;
+&nbsp;import org.springframework.context.annotation.Configuration;
+&nbsp;import org.springframework.kafka.config.TopicBuilder;
+&nbsp;import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+&nbsp;import org.springframework.kafka.core.KafkaTemplate;
+&nbsp;import org.springframework.kafka.core.ProducerFactory;
+&nbsp;import org.springframework.kafka.support.serializer.JsonSerializer;
+&nbsp;import com.example.demo.dto.EmailMessage;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;@Configuration
+<b class="nc">&nbsp;public class KafkaProducerConfig {</b>
+&nbsp;
+&nbsp;    @Value(&quot;${spring.kafka.bootstrap-servers}&quot;)
+&nbsp;    private String bootstrapServers;
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public NewTopic emailTopic() {
+<b class="nc">&nbsp;        return TopicBuilder.name(&quot;email-topic&quot;)</b>
+<b class="nc">&nbsp;                .partitions(1)</b>
+<b class="nc">&nbsp;                .replicas(1)</b>
+<b class="nc">&nbsp;                .build();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public ProducerFactory&lt;String, EmailMessage&gt; producerFactory() {
+<b class="nc">&nbsp;        Map&lt;String, Object&gt; configProps = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);</b>
+<b class="nc">&nbsp;        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);</b>
+<b class="nc">&nbsp;        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);</b>
+<b class="nc">&nbsp;        return new DefaultKafkaProducerFactory&lt;&gt;(configProps);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Bean
+&nbsp;    public KafkaTemplate&lt;String, EmailMessage&gt; kafkaTemplate() {
+<b class="nc">&nbsp;        return new KafkaTemplate&lt;&gt;(producerFactory());</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-20 17:10</div>
+</div>
+</body>
+</html>

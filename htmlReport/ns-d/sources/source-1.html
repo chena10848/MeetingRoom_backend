@@ -1,0 +1,122 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MeetingRoomRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.demo.Repository</a>
+</div>
+
+<h1>Coverage Summary for Class: MeetingRoomRepository (com.example.demo.Repository)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">MeetingRoomRepository</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.demo.Repository;
+&nbsp;
+&nbsp;import org.springframework.data.jpa.repository.Modifying;
+&nbsp;import org.springframework.data.jpa.repository.Query;
+&nbsp;import org.springframework.data.repository.query.Param;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;import com.example.demo.Entity.MeetingRoom;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.time.LocalDateTime;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface MeetingRoomRepository extends JpaRepository&lt;MeetingRoom, Long&gt;  {
+&nbsp;
+&nbsp;    @Query(&quot;SELECT &quot; +
+&nbsp;            &quot;mtr.id, &quot; +
+&nbsp;            &quot;mtrn.id, &quot; +
+&nbsp;            &quot;mtrn.meetingroomName, &quot; +
+&nbsp;            &quot;u.userName, &quot; +
+&nbsp;            &quot;mtr.lesseeStartTime, &quot; +
+&nbsp;            &quot;mtr.lesseeEndTime &quot; +
+&nbsp;            &quot;FROM MeetingRoom mtr &quot; +
+&nbsp;            &quot;INNER JOIN &quot; +
+&nbsp;            &quot;MeetingRoomName mtrn &quot; +
+&nbsp;            &quot;ON mtr.meetingRoomNameId = mtrn.id &quot; +
+&nbsp;            &quot;INNER JOIN &quot; +
+&nbsp;            &quot;User u &quot; +
+&nbsp;            &quot;ON mtr.lesseeUserId = u.id &quot;
+&nbsp;//            &quot;WHERE mtr.lesseeStartTime BETWEEN :startTime AND :endTime &quot; +
+&nbsp;//            &quot;AND mtr.lesseeEndTime BETWEEN :startTime AND :endTime&quot;
+&nbsp;    )
+&nbsp;    List&lt;Object[]&gt; findMeetingRoomsByTimeRange();
+&nbsp;
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    @Modifying
+&nbsp;    @Query(&quot;UPDATE MeetingRoom mr SET &quot; +
+&nbsp;            &quot;mr.meetingRoomNameId = CASE WHEN :meetingroomNameId IS NOT NULL THEN :meetingroomNameId ELSE mr.meetingRoomNameId END, &quot; +
+&nbsp;            &quot;mr.lesseeStartTime = CASE WHEN :startTime IS NOT NULL THEN :startTime ELSE mr.lesseeStartTime END, &quot; +
+&nbsp;            &quot;mr.lesseeEndTime = CASE WHEN :endTime IS NOT NULL THEN :endTime ELSE mr.lesseeEndTime END &quot; +
+&nbsp;            &quot;WHERE mr.id = :meetingroomId&quot;)
+&nbsp;    void updateMeetingGroup(@Param(&quot;meetingroomNameId&quot;) Integer meetingroomNameId,
+&nbsp;                    @Param(&quot;startTime&quot;) LocalDateTime startTime,
+&nbsp;                    @Param(&quot;endTime&quot;) LocalDateTime endTime,
+&nbsp;                    @Param(&quot;meetingroomId&quot;) Integer meetingroomId);
+&nbsp;
+&nbsp;
+&nbsp;    @Transactional
+&nbsp;    @Modifying
+&nbsp;    @Query(&quot;DELETE FROM MeetingRoom mr WHERE mr.id = :Id&quot;)
+&nbsp;    void deleteMeetingRoomById(@Param(&quot;Id&quot;) Integer Id);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-12-20 17:10</div>
+</div>
+</body>
+</html>

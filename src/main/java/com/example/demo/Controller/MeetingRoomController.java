@@ -50,12 +50,10 @@ public class MeetingRoomController {
     @GetMapping("/api/getMeetingRoomList")
     @Operation(summary = "取得預約的會議紀錄")
     public ResponseEntity<List<Map<String, Object>>> getMeetingRoomList(
-            @RequestHeader("Authorization") String token,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            @RequestHeader("Authorization") String token
     ) {
         this.jwtUtil.validateToken(token);
-        return this.meetingRoomService.getMeetingRoomListInit(startTime, endTime);
+        return this.meetingRoomService.getMeetingRoomListInit();
     }
 
     //租借會議室

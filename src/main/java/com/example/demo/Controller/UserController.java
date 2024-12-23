@@ -36,24 +36,36 @@ public class UserController {
     @PostMapping("/api/createUser")
     @Operation(summary = "註冊會員")
     public ApiResponse<String> insertUser(@RequestBody InsertUserRequest request) {
+        if (request == null) {
+            throw new NullPointerException("Request body is null");
+        }
         return this.userService.insertUserInit(request);
     }
 
     @PostMapping("/api/login")
     @Operation(summary = "會員登入")
     public ApiResponse<String> loginUser(@RequestBody loginRequest request) {
+        if (request == null) {
+            throw new NullPointerException("Request body is null");
+        }
         return this.userService.loginUserInit(request);
     }
 
     @PostMapping("/api/login/google")
     @Operation(summary = "Google登入")
     public ApiResponse<String> googleLoginUser(@RequestBody googleLoginUser request) {
+        if (request == null) {
+            throw new NullPointerException("Request body is null");
+        }
         return this.userService.googleLoginUserInit(request);
     }
 
     @PostMapping("/api/logout")
     @Operation(summary = "會員登出")
     public ApiResponse<String> logoutUser(@RequestHeader("Authorization") String token) {
+        if (token == null) {
+            throw new NullPointerException("Token is null");
+        }
         this.jwtUtil.validateToken(token);
         return this.userService.logoutUserInit(token);
     }

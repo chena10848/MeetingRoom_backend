@@ -116,7 +116,7 @@ public class MeetingRoomService {
     }
 
     //取得會議室
-    public ResponseEntity<List<Map<String, Object>>> getMeetingRoomListInit(LocalDateTime startTime, LocalDateTime endTime) {
+    public ResponseEntity<List<Map<String, Object>>> getMeetingRoomListInit() {
         try {
 
             List<Map<String, Object>> cachedResponse =
