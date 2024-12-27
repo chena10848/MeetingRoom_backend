@@ -1,10 +1,9 @@
 package com.example.demo.Other;
 
-import java.io.PrintStream;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrintStreamColor extends PrintStream {
+public class PrintStreamColor {
 
     // ANSI color codes
     public static final String RESET = "\u001B[0m";
@@ -13,22 +12,16 @@ public class PrintStreamColor extends PrintStream {
     public static final String BLUE = "\u001B[34m";
 
     // Constructor that wraps another PrintStream (e.g., System.out)
-    public PrintStreamColor(PrintStream original) {
-        super(original);
+    public PrintStreamColor() {
+        // Wrapping System.out to add color
     }
 
     // Override println to add color
     public void printlnRed(String message) {
-        super.println(RED + message + RESET);
+        System.out.println(RED + message + RESET + "\r\n");
     }
 
     public void printlnGreen(String message) {
-        System.out.println("DEBUG: printlnGreen called");
-        super.println(GREEN + message + RESET);
+        System.out.println(GREEN + message + RESET + "\r\n");
     }
-
-    public void printlnBlue(String message) {
-        super.println(BLUE + message + RESET);
-    }
-
 }

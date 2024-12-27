@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import com.example.demo.Component.JwtUtil;
+import com.example.demo.Other.PrintStreamColor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,10 +26,17 @@ public class MeetingRoomController {
     private final MeetingRoomService meetingRoomService;
     @Autowired
     private final JwtUtil jwtUtil;
+    @Autowired
+    private final PrintStreamColor printStreamColor;
 
-    public MeetingRoomController(MeetingRoomService meetingRoomService,JwtUtil jwtUtil) {
+    public MeetingRoomController(
+            MeetingRoomService meetingRoomService,
+            JwtUtil jwtUtil,
+            PrintStreamColor printStreamColor
+    ) {
         this.meetingRoomService = meetingRoomService;
         this.jwtUtil = jwtUtil;
+        this.printStreamColor = printStreamColor;
     }
 
     //取得所有的使用者
@@ -43,6 +51,7 @@ public class MeetingRoomController {
     @Operation(summary = "取得所有會議室")
     public ResponseEntity<List<Map<String, Object>>> getMeetingRoomId(@RequestHeader("Authorization") String token) {
         this.jwtUtil.validateToken(token);
+        this.printStreamColor.printlnGreen(token);
         return this.meetingRoomService.getMeetingRoomIdInit();
     }
 
@@ -53,6 +62,7 @@ public class MeetingRoomController {
             @RequestHeader("Authorization") String token
     ) {
         this.jwtUtil.validateToken(token);
+
         return this.meetingRoomService.getMeetingRoomListInit();
     }
 
