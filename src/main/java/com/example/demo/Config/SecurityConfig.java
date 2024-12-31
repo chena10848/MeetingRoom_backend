@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
                         .successHandler((request, response, authentication) -> {
-                                response.sendRedirect("http://localhost:80/meetingroom/index.html");
+                                response.sendRedirect("http://localhost:3000/home");
                         }) // 登入成功後重定向到前端頁面,false表示不開新頁面
                         .permitAll()
                         .failureUrl("http://localhost:8080/"))
@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/createUser", "/api/getMeetingRoomList", "/api/leaseMeetingRoom",
                                 "/api/updateMeetingRoom", "/api/deleteMeetingRoom", "/swagger-ui/**", "/api/login", "/api/allUser", "/api/logout",
-                                "/api/validateToken", "/api/getMeetingRoomId", "/api/login/google"
+                                "/api/validateToken", "/api/getMeetingRoomId", "/api/login/google", "/ws/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -47,12 +47,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));  // 確保與前端一致
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "Access-Control-Allow-Origin"));
-        configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-
+        configuration.addAllowedOriginPattern("*"); // 允許所有來源
+        configuration.addAllowedMethod("*"); // 允許所有 HTTP 方法
+        configuration.addAllowedHeader("*"); // 允許所有標頭
+        configuration.setAllowCredentials(true); // 允許攜帶 Cookie
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

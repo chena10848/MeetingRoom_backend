@@ -1,35 +1,30 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Component.JwtUtil;
+import com.example.demo.Other.PrintStreamColor;
 import com.example.demo.Request.MeetingRoom.DeleteMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.LeaseMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.UpdateMeetingRoomRequest;
-
 import com.example.demo.Service.ApiResponse;
 import com.example.demo.Service.MeetingRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import com.example.demo.Component.JwtUtil;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "Meeting Room API", description = "租借會議室")
 @RestController
+@RequiredArgsConstructor
 @Tag(name = "Meeting Room API")
 public class MeetingRoomController {
 
-    @Autowired
     private final MeetingRoomService meetingRoomService;
-    @Autowired
     private final JwtUtil jwtUtil;
-
-    public MeetingRoomController(MeetingRoomService meetingRoomService,JwtUtil jwtUtil) {
-        this.meetingRoomService = meetingRoomService;
-        this.jwtUtil = jwtUtil;
-    }
+    private final PrintStreamColor printStreamColor;
 
     //取得所有的使用者
     @GetMapping("/api/allUser")
@@ -43,6 +38,7 @@ public class MeetingRoomController {
     @Operation(summary = "取得所有會議室")
     public ResponseEntity<List<Map<String, Object>>> getMeetingRoomId(@RequestHeader("Authorization") String token) {
         this.jwtUtil.validateToken(token);
+        this.printStreamColor.printlnGreen(token);
         return this.meetingRoomService.getMeetingRoomIdInit();
     }
 
@@ -53,6 +49,7 @@ public class MeetingRoomController {
             @RequestHeader("Authorization") String token
     ) {
         this.jwtUtil.validateToken(token);
+
         return this.meetingRoomService.getMeetingRoomListInit();
     }
 
@@ -62,7 +59,7 @@ public class MeetingRoomController {
     public ApiResponse<String> leaseMeetingRoom(
             @RequestHeader("Authorization") String token,
             @RequestBody LeaseMeetingRoomRequest request
-    ){
+    ) {
         this.jwtUtil.validateToken(token);
         return this.meetingRoomService.leaseMeetingRoomInit(request, token);
     }
