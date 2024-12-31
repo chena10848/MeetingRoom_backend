@@ -1,43 +1,30 @@
 package com.example.demo.Controller;
 
+import com.example.demo.Component.JwtUtil;
+import com.example.demo.Other.PrintStreamColor;
 import com.example.demo.Request.MeetingRoom.DeleteMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.LeaseMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.UpdateMeetingRoomRequest;
-
 import com.example.demo.Service.ApiResponse;
 import com.example.demo.Service.MeetingRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import com.example.demo.Component.JwtUtil;
-import com.example.demo.Other.PrintStreamColor;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "Meeting Room API", description = "租借會議室")
 @RestController
+@RequiredArgsConstructor
 @Tag(name = "Meeting Room API")
 public class MeetingRoomController {
 
-    @Autowired
     private final MeetingRoomService meetingRoomService;
-    @Autowired
     private final JwtUtil jwtUtil;
-    @Autowired
     private final PrintStreamColor printStreamColor;
-
-    public MeetingRoomController(
-            MeetingRoomService meetingRoomService,
-            JwtUtil jwtUtil,
-            PrintStreamColor printStreamColor
-    ) {
-        this.meetingRoomService = meetingRoomService;
-        this.jwtUtil = jwtUtil;
-        this.printStreamColor = printStreamColor;
-    }
 
     //取得所有的使用者
     @GetMapping("/api/allUser")
@@ -72,7 +59,7 @@ public class MeetingRoomController {
     public ApiResponse<String> leaseMeetingRoom(
             @RequestHeader("Authorization") String token,
             @RequestBody LeaseMeetingRoomRequest request
-    ){
+    ) {
         this.jwtUtil.validateToken(token);
         return this.meetingRoomService.leaseMeetingRoomInit(request, token);
     }
