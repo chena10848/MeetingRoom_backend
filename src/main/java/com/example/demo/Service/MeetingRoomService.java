@@ -1,37 +1,33 @@
 package com.example.demo.Service;
 
-import com.example.demo.dto.EmailMessage;
-
-import com.example.demo.exception.UserNotFoundException;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-
-import com.example.demo.Entity.MeetingRoom;
+import com.example.demo.Component.JwtUtil;
 import com.example.demo.Entity.MeetingGroupUser;
-
-import com.example.demo.Repository.UserRepository;
-import com.example.demo.Repository.MeetingRoomRepository;
-import com.example.demo.Repository.MeetingRoomNameRepository;
+import com.example.demo.Entity.MeetingRoom;
 import com.example.demo.Repository.MeetingGroupUserRepository;
-
+import com.example.demo.Repository.MeetingRoomNameRepository;
+import com.example.demo.Repository.MeetingRoomRepository;
+import com.example.demo.Repository.UserRepository;
+import com.example.demo.Request.MeetingRoom.DeleteMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.LeaseMeetingRoomRequest;
 import com.example.demo.Request.MeetingRoom.UpdateMeetingRoomRequest;
-import com.example.demo.Request.MeetingRoom.DeleteMeetingRoomRequest;
-
-import com.example.demo.Component.JwtUtil;
-
-import java.time.*;
-import java.util.*;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
+import com.example.demo.dto.EmailMessage;
+import com.example.demo.exception.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingRoomService {
@@ -64,7 +60,7 @@ public class MeetingRoomService {
             KafkaTemplate<String, EmailMessage> kafkaTemplate,
             JwtUtil jwtUtil,
             RedisTemplate<String, Object> myRedisTemplate
-    ){
+    ) {
         this.userRepository = userRepository;
         this.meetingRoomRepository = meetingRoomRepository;
         this.meetingGroupUserRepository = meetingGroupUserRepository;
@@ -139,6 +135,7 @@ public class MeetingRoomService {
 
     /**
      * 整理會議室資料
+     *
      * @param meetingRoomList List 會議室資訊
      * @return List
      */
@@ -193,8 +190,8 @@ public class MeetingRoomService {
             MeetingRoom savedRoom = this.meetingRoomRepository.save(meetingRoom);
             Integer meetingRoomId = savedRoom.getId();
             //寫入 meeting_group_user
-            if(participants != null) {
-                for(Integer item: participants) {
+            if (participants != null) {
+                for (Integer item : participants) {
                     MeetingGroupUser meetingGroupUser = new MeetingGroupUser();
                     meetingGroupUser.setMeetingroomId(meetingRoomId);
                     meetingGroupUser.setUserId(item);
@@ -219,7 +216,7 @@ public class MeetingRoomService {
                             );
 
                             EmailMessage em = new EmailMessage(email, subject, text);
-                            sendToKafka(em);
+                            //sendToKafka(em);
                         });
             }
 
@@ -232,13 +229,14 @@ public class MeetingRoomService {
                     200,
                     ""
             );
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new UserNotFoundException(ex.getMessage());
         }
     }
 
     /**
      * 將寄信功能寫入對列
+     *
      * @param em EmailMessage
      */
     @Async
@@ -258,12 +256,12 @@ public class MeetingRoomService {
             Integer[] deleteUserIds = request.getDeleteUserId();
 
             //更新 Meeting Room 資料
-            if(meetingroomNameId != null || startTime != null || endTime != null) {
+            if (meetingroomNameId != null || startTime != null || endTime != null) {
                 this.meetingRoomRepository.updateMeetingGroup(meetingroomNameId, startTime, endTime, meetingroomId);
             }
             //新增 Meeting Group 資料
-            if(createUserIds != null) {
-                for (Integer userId: createUserIds) {
+            if (createUserIds != null) {
+                for (Integer userId : createUserIds) {
                     MeetingGroupUser meetingGroupUser = new MeetingGroupUser();
                     meetingGroupUser.setMeetingroomId(meetingroomId);
                     meetingGroupUser.setUserId(userId);
@@ -272,8 +270,8 @@ public class MeetingRoomService {
                 }
             }
             //刪除 Meeting Group 資料
-            if(deleteUserIds != null) {
-                for(Integer userId: deleteUserIds) {
+            if (deleteUserIds != null) {
+                for (Integer userId : deleteUserIds) {
                     this.meetingGroupUserRepository.deleteMeetingGroup(meetingroomId, userId);
                 }
             }
